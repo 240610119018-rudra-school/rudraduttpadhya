@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Big Bite – Food Delivery App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Fraunces:ital,wght@0,700;0,900;1,700;1,900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --saffron: #7B0D3E;
+      --turmeric: #C4365A;
+      --chili:   #9B1040;
+      --mint:    #7B0D3E;
+      --dark:    #1A0010;
+      --charcoal:#3D0020;
+      --tan:     #7A4A5A;
+      --cream:   #FFF7FA;
+      --ivory:   #FFF0F5;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Sora', sans-serif; background: var(--cream); color: var(--dark); overflow-x: hidden; }
+
+    /* ══ NAV ══ */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 5vw;
+      background: rgba(255,253,247,0.94); backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(123,13,62,0.12);
+    }
+    .logo {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .logo-icon {
+      width: 40px; height: 40px; background: var(--saffron); border-radius: 12px;
+      display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
+    }
+    .logo-text { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 900; color: var(--dark); }
+    .logo-text span { color: var(--saffron); }
+    nav ul { list-style: none; display: flex; gap: 2.2rem; }
+    nav ul a { text-decoration: none; color: var(--charcoal); font-weight: 500; font-size: .9rem; transition: color .2s; }
+    nav ul a:hover { color: var(--saffron); }
+    /* tab switcher pills in nav */
+    .nav-tabs {
+      display: flex; background: rgba(123,13,62,.08);
+      border-radius: 50px; padding: 4px; gap: 2px;
+    }
+    .nav-tab {
+      padding: 8px 20px; border-radius: 50px;
+      font-weight: 600; font-size: .88rem; cursor: pointer;
+      color: var(--tan); border: none; background: transparent;
+      font-family: 'Sora', sans-serif; transition: all .2s;
+    }
+    .nav-tab.active { background: #fff; color: var(--dark); box-shadow: 0 2px 10px rgba(0,0,0,.1); }
+    .nav-tab.danger.active { background: var(--chili); color: #fff; }
+    .nav-tab:hover:not(.active) { color: var(--saffron); }
+
+    /* ══ HERO ══ */
+    #home {
+      min-height: 100vh; padding: 110px 5vw 60px;
+      display: flex; align-items: center;
+      position: relative; overflow: hidden;
+    }
+    .hero-blob {
+      position: absolute; border-radius: 50%; filter: blur(90px); pointer-events: none;
+    }
+    .blob1 { width: 600px; height: 600px; background: rgba(123,13,62,.12); top: -100px; right: -100px; }
+    .blob2 { width: 400px; height: 400px; background: rgba(155,16,64,.08); bottom: 0; left: -80px; }
+    .hero-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 3rem; align-items: center;
+      max-width: 1200px; width: 100%; margin: 0 auto;
+      position: relative; z-index: 1;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(123,13,62,.1); color: var(--saffron);
+      font-size: .78rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 7px 18px; border-radius: 50px; margin-bottom: 1.4rem;
+      border: 1px solid rgba(123,13,62,.25);
+    }
+    .hero-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2.8rem, 5.5vw, 5rem);
+      font-weight: 900; line-height: 1.05; margin-bottom: 1.2rem;
+    }
+    .hero-title .accent { color: var(--saffron); font-style: italic; }
+    .hero-title .sub-accent { color: var(--chili); }
+    .hero-desc { color: var(--tan); line-height: 1.75; font-size: 1rem; max-width: 460px; margin-bottom: 2rem; }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+    .btn-main {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--saffron); color: #fff;
+      padding: 12px 22px; border-radius: 14px;
+      font-weight: 700; font-size: .95rem; text-decoration: none;
+      box-shadow: 0 8px 32px rgba(123,13,62,.35); transition: all .25s;
+    }
+    .btn-main:hover { background: #5a0a2d; transform: translateY(-2px); }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 10px;
+      border: 2px solid var(--dark); color: var(--dark);
+      padding: 12px 24px; border-radius: 14px;
+      font-weight: 600; font-size: .95rem; text-decoration: none; transition: all .25s;
+    }
+    .btn-ghost:hover { background: var(--dark); color: #fff; }
+    .hero-stats { display: flex; gap: 2rem; }
+    .hstat { }
+    .hstat-num { font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 900; color: var(--dark); }
+    .hstat-num span { color: var(--saffron); }
+    .hstat-label { font-size: .75rem; color: var(--tan); font-weight: 500; margin-top: 2px; }
+
+    /* phone mockup */
+    .hero-phone-wrap { position: relative; display: flex; justify-content: center; }
+    .phone {
+      width: 250px; height: 510px;
+      background: linear-gradient(160deg, #1a0010 0%, #0f000a 100%);
+      border-radius: 40px;
+      box-shadow: 0 50px 100px rgba(123,13,62,.25), 0 0 0 1.5px rgba(123,13,62,.2);
+      overflow: hidden; position: relative; display: flex; flex-direction: column;
+    }
+    .phone-bar { height: 28px; background: #080005; display: flex; justify-content: center; padding-top: 8px; }
+    .phone-pill { width: 80px; height: 6px; background: #1a0010; border-radius: 10px; }
+    .phone-body { flex: 1; padding: 12px; display: flex; flex-direction: column; gap: 8px; overflow: hidden; }
+    .pb-head { display: flex; justify-content: space-between; align-items: center; }
+    .pb-logo { font-family: 'Fraunces', serif; font-size: .95rem; font-weight: 900; color: var(--saffron); }
+    .pb-cart { background: rgba(123,13,62,.2); border-radius: 8px; padding: 5px 8px; font-size: .8rem; }
+    .pb-search { background: rgba(255,255,255,.07); border-radius: 10px; padding: 9px 12px; color: rgba(255,255,255,.4); font-size: .75rem; }
+    .pb-cats { display: flex; gap: 6px; overflow: hidden; }
+    .pb-cat { padding: 5px 12px; border-radius: 20px; font-size: .68rem; font-weight: 600; white-space: nowrap; }
+    .pb-cat.a { background: var(--saffron); color: #fff; }
+    .pb-cat.b { background: rgba(255,255,255,.07); color: rgba(255,255,255,.5); }
+    .pb-section { color: rgba(255,255,255,.9); font-size: .75rem; font-weight: 700; }
+    .pb-card { background: rgba(255,255,255,.06); border-radius: 12px; padding: 10px; display: flex; align-items: center; gap: 8px; }
+    .pb-emoji { font-size: 1.8rem; }
+    .pb-info { flex: 1; }
+    .pb-name { color: #fff; font-size: .72rem; font-weight: 600; }
+    .pb-price { color: var(--saffron); font-size: .68rem; font-weight: 700; }
+    .pb-add { background: var(--saffron); color: #fff; width: 24px; height: 24px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 700; }
+
+    /* floating cards */
+    .float-card {
+      position: absolute; background: #fff;
+      border-radius: 14px; padding: 10px 16px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.12);
+      font-size: .8rem; display: flex; align-items: center; gap: 8px;
+      animation: bob 3s ease-in-out infinite;
+    }
+    .float-card.f1 { top: 60px; left: -80px; animation-delay: 0s; }
+    .float-card.f2 { bottom: 100px; right: -70px; animation-delay: 1.5s; }
+    @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+    .fc-icon { font-size: 1.4rem; }
+    .fc-label { font-weight: 700; color: var(--dark); display: block; font-size: .82rem; }
+    .fc-sub { color: var(--tan); font-size: .72rem; }
+
+    /* ══ ZONE MARQUEE ══ */
+    .zone-bar {
+      background: var(--saffron); overflow: hidden; padding: 14px 0;
+      white-space: nowrap;
+    }
+    .zone-track {
+      display: inline-flex; gap: 0;
+      animation: marquee 22s linear infinite;
+    }
+    @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+    .zone-item {
+      padding: 0 2rem; color: #fff; font-weight: 600; font-size: .88rem;
+      display: inline-flex; align-items: center; gap: .5rem;
+    }
+    .zone-dot { width: 5px; height: 5px; background: rgba(255,255,255,.5); border-radius: 50%; }
+
+    /* ══ FEATURES ══ */
+    #features { padding: 100px 5vw; max-width: 1200px; margin: 0 auto; }
+    .sec-label { color: var(--saffron); font-size: .75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: .8rem; }
+    .sec-title { font-family: 'Fraunces', serif; font-size: clamp(1.8rem, 3.5vw, 3rem); font-weight: 900; line-height: 1.1; margin-bottom: 3rem; }
+    .feat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+    .feat-card {
+      background: #fff; border-radius: 22px; padding: 2rem;
+      border: 1.5px solid transparent;
+      transition: all .3s; position: relative; overflow: hidden;
+    }
+    .feat-card:hover { border-color: var(--saffron); transform: translateY(-5px); box-shadow: 0 16px 48px rgba(123,13,62,.1); }
+    .feat-icon { width: 52px; height: 52px; border-radius: 14px; background: var(--ivory); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.2rem; }
+    .feat-name { font-weight: 700; font-size: 1rem; margin-bottom: .5rem; }
+    .feat-desc { color: var(--tan); font-size: .88rem; line-height: 1.65; }
+
+    /* ══ HOW IT WORKS ══ */
+    #how { background: var(--dark); padding: 100px 5vw; }
+    #how .inner { max-width: 1100px; margin: 0 auto; }
+    #how .sec-label { color: var(--turmeric); }
+    #how .sec-title { color: #fff; }
+    .steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 2rem; }
+    .step { text-align: center; }
+    .step-num {
+      width: 64px; height: 64px; border-radius: 50%;
+      border: 2px solid var(--saffron); color: var(--saffron);
+      font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 900;
+      display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;
+    }
+    .step-title { color: #fff; font-weight: 700; font-size: 1rem; margin-bottom: .5rem; }
+    .step-desc { color: rgba(255,255,255,.5); font-size: .88rem; line-height: 1.65; }
+
+    /* ══ DELIVERY ZONES ══ */
+    #zones { padding: 100px 5vw; max-width: 1200px; margin: 0 auto; }
+    .zones-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; }
+    .zone-pill {
+      background: #fff; border: 1.5px solid rgba(123,13,62,.15);
+      border-radius: 12px; padding: 14px 18px; text-align: center;
+      font-weight: 600; font-size: .9rem; color: var(--charcoal);
+      transition: all .25s; cursor: default;
+    }
+    .zone-pill:hover { background: var(--saffron); color: #fff; border-color: var(--saffron); transform: scale(1.04); }
+    .zone-pill .pin { font-size: 1rem; margin-bottom: .3rem; display: block; }
+
+    /* ══ ECOSYSTEM ══ */
+    #eco { background: var(--ivory); padding: 100px 5vw; }
+    #eco .inner { max-width: 1100px; margin: 0 auto; }
+    .eco-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2rem; }
+    .eco-card {
+      background: #fff; border-radius: 24px; padding: 2.5rem;
+      text-align: center; transition: all .3s;
+      box-shadow: 0 4px 20px rgba(0,0,0,.05);
+    }
+    .eco-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(123,13,62,.12); }
+    .eco-emoji { font-size: 3rem; margin-bottom: 1rem; display: block; }
+    .eco-title { font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 900; margin-bottom: .6rem; }
+    .eco-desc { color: var(--tan); font-size: .88rem; line-height: 1.65; margin-bottom: 1.5rem; }
+    .eco-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--dark); color: #fff;
+      padding: 10px 22px; border-radius: 10px; font-size: .82rem;
+      font-weight: 600; text-decoration: none; transition: background .2s;
+    }
+    .eco-btn:hover { background: var(--saffron); }
+
+    /* ══ REVIEWS ══ */
+    #reviews { padding: 100px 5vw; max-width: 1100px; margin: 0 auto; }
+    .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+    .review-card { background: #fff; border-radius: 20px; padding: 2rem; border: 1.5px solid rgba(123,13,62,.1); }
+    .rv-stars { color: var(--turmeric); font-size: 1rem; margin-bottom: .8rem; }
+    .rv-text { color: var(--tan); font-size: .88rem; line-height: 1.7; margin-bottom: 1.2rem; font-style: italic; }
+    .rv-author { font-weight: 700; font-size: .88rem; color: var(--dark); }
+    .rv-date { font-size: .75rem; color: var(--tan); }
+
+    /* ══ APP DOWNLOAD ══ */
+    #download {
+      background: linear-gradient(135deg, var(--chili) 0%, var(--saffron) 100%);
+      padding: 100px 5vw; text-align: center;
+    }
+    #download .inner { max-width: 700px; margin: 0 auto; }
+    .dl-title { font-family: 'Fraunces', serif; font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 900; color: #fff; margin-bottom: 1rem; }
+    .dl-sub { color: rgba(255,255,255,.85); line-height: 1.7; margin-bottom: 2.5rem; }
+    .dl-btn {
+      display: inline-flex; align-items: center; gap: 12px;
+      background: #fff; color: var(--dark);
+      padding: 16px 32px; border-radius: 16px;
+      font-weight: 700; font-size: 1rem; text-decoration: none;
+      box-shadow: 0 8px 32px rgba(0,0,0,.2); transition: all .25s;
+    }
+    .dl-btn:hover { transform: translateY(-2px); box-shadow: 0 16px 48px rgba(0,0,0,.25); }
+    .dl-btn-icon { font-size: 2rem; }
+    .dl-btn-text small { display: block; font-size: .7rem; color: var(--tan); }
+    .dl-btn-text strong { font-size: 1rem; }
+
+    /* ══ CONTACT ══ */
+    #contact { padding: 80px 5vw; max-width: 900px; margin: 0 auto; }
+    .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
+    .contact-card { background: #fff; border-radius: 18px; padding: 1.8rem; border: 1.5px solid rgba(123,13,62,.1); display: flex; gap: 1rem; align-items: flex-start; }
+    .cc-icon { font-size: 1.8rem; flex-shrink: 0; }
+    .cc-label { font-weight: 700; font-size: .88rem; color: var(--tan); margin-bottom: .3rem; }
+    .cc-val { font-size: .9rem; font-weight: 600; color: var(--dark); }
+    .cc-val a { color: inherit; text-decoration: none; }
+    .cc-val a:hover { color: var(--saffron); }
+
+    /* ══ DELETE SECTION ══ */
+    #delete {
+      background: #FFF0F5;
+      border-top: 3px solid var(--chili);
+      padding: 100px 5vw;
+    }
+    #delete .inner { max-width: 700px; margin: 0 auto; }
+    .del-badge {
+      display: inline-flex; align-items: center; gap: .6rem;
+      background: rgba(155,16,64,.1); color: var(--chili);
+      font-weight: 700; font-size: .78rem; letter-spacing: 1px; text-transform: uppercase;
+      padding: 8px 20px; border-radius: 50px; margin-bottom: 1.2rem;
+      border: 1px solid rgba(155,16,64,.2);
+    }
+    .del-title { font-family: 'Fraunces', serif; font-size: 2.5rem; font-weight: 900; margin-bottom: .8rem; text-align: center; }
+    .del-sub { color: var(--tan); line-height: 1.7; text-align: center; max-width: 560px; margin: 0 auto 2.5rem; }
+    .del-warning {
+      background: #fff; border-radius: 18px; padding: 1.8rem; margin-bottom: 2rem;
+      border: 1.5px solid rgba(155,16,64,.2);
+    }
+    .del-warning h4 { font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: .5rem; }
+    .del-warning ul { list-style: none; display: flex; flex-direction: column; gap: .65rem; }
+    .del-warning li { display: flex; align-items: flex-start; gap: .8rem; color: var(--tan); font-size: .9rem; line-height: 1.55; }
+    .del-form { background: #fff; border-radius: 24px; padding: 2.5rem; border: 1.5px solid rgba(155,16,64,.15); }
+    .del-form h3 { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 900; margin-bottom: 1.8rem; }
+    .fg { margin-bottom: 1.4rem; }
+    label { display: block; font-weight: 600; font-size: .85rem; margin-bottom: .5rem; color: var(--charcoal); }
+    input[type=text], input[type=email], input[type=tel], select, textarea {
+      width: 100%; padding: 13px 16px; border-radius: 12px;
+      border: 1.5px solid #E8D8D0; font-family: 'Sora', sans-serif;
+      font-size: .9rem; color: var(--dark); background: var(--cream);
+      outline: none; transition: border .2s;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--chili); background: #fff; }
+    textarea { resize: vertical; min-height: 90px; }
+    .cb-row { display: flex; align-items: flex-start; gap: .8rem; }
+    .cb-row input[type=checkbox] { width: auto; margin-top: 4px; accent-color: var(--chili); }
+    .cb-text { font-size: .85rem; color: var(--tan); line-height: 1.55; }
+    .del-submit {
+      width: 100%; padding: 16px; border-radius: 14px;
+      background: var(--chili); color: #fff;
+      font-family: 'Sora', sans-serif; font-weight: 700; font-size: 1rem;
+      border: none; cursor: pointer; transition: all .25s;
+      box-shadow: 0 6px 24px rgba(155,16,64,.3);
+    }
+    .del-submit:hover { background: #7a0d32; transform: translateY(-1px); }
+    .del-submit:disabled { background: #4caf50; cursor: default; transform: none; }
+    .del-success {
+      display: none; margin-top: 1rem;
+      background: #e8f5e9; border: 1.5px solid #4caf50;
+      border-radius: 12px; padding: 1.2rem; text-align: center;
+      color: #2e7d32; font-weight: 600; font-size: .92rem;
+    }
+
+    /* ══ FOOTER ══ */
+    footer { background: var(--dark); padding: 60px 5vw 30px; }
+    .footer-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+    .foot-brand .logo-text { font-size: 1.6rem; color: #fff; margin-bottom: .8rem; display: block; }
+    .foot-desc { color: rgba(255,255,255,.5); font-size: .85rem; line-height: 1.7; margin-bottom: 1.2rem; }
+    .foot-contact { color: rgba(255,255,255,.5); font-size: .82rem; line-height: 2; }
+    .foot-contact a { color: var(--turmeric); text-decoration: none; }
+    .foot-col h5 { color: #fff; font-weight: 700; margin-bottom: 1rem; font-size: .9rem; }
+    .foot-col ul { list-style: none; display: flex; flex-direction: column; gap: .6rem; }
+    .foot-col ul a { color: rgba(255,255,255,.5); text-decoration: none; font-size: .85rem; transition: color .2s; }
+    .foot-col ul a:hover { color: var(--saffron); }
+    .foot-bottom { max-width: 1100px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,.08); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .foot-bottom p { color: rgba(255,255,255,.4); font-size: .8rem; }
+    .foot-bottom a { color: var(--saffron); text-decoration: none; font-size: .8rem; }
+
+    /* ══ ANIMS ══ */
+    [data-a] { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+    [data-a].vis { opacity: 1; transform: none; }
+
+    /* ══ LEGAL PAGES ══ */
+    .lp-hero {
+      background: linear-gradient(135deg, var(--dark) 0%, #3D0020 100%);
+      padding: 100px 5vw 56px; text-align: center;
+      border-bottom: 1px solid rgba(196,54,90,.15);
+    }
+    .lp-hero-inner { max-width: 720px; margin: 0 auto; }
+    .lp-back {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,.07); color: rgba(255,255,255,.65);
+      border: 1px solid rgba(255,255,255,.13); padding: 9px 20px;
+      border-radius: 50px; font-family: 'Sora', sans-serif;
+      font-size: .84rem; font-weight: 600; cursor: pointer;
+      margin-bottom: 2rem; transition: all .2s;
+    }
+    .lp-back:hover { background: rgba(123,13,62,.4); color: #C4365A; border-color: rgba(196,54,90,.3); }
+    .lp-badge {
+      display: inline-block; background: rgba(196,54,90,.15);
+      color: #C4365A; font-size: .72rem; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: 5px 16px; border-radius: 50px; margin-bottom: 1rem;
+      border: 1px solid rgba(196,54,90,.25);
+    }
+    .lp-title {
+      font-family: 'Fraunces', serif; font-weight: 900; color: #fff;
+      font-size: clamp(2rem, 4vw, 3rem); line-height: 1.08; margin-bottom: .7rem;
+    }
+    .lp-sub { color: rgba(255,255,255,.45); font-size: .9rem; }
+
+    .lp-wrap {
+      display: block;
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 48px 5vw 80px;
+    }
+
+    /* Article body */
+    .lp-body { min-width: 0; }
+    .lp-intro {
+      font-size: 1rem; line-height: 1.8; color: var(--tan);
+      background: var(--ivory); border-radius: 16px; padding: 1.4rem 1.8rem;
+      margin-bottom: 2.5rem; border-left: 4px solid var(--saffron);
+    }
+    .lp-section { margin-bottom: 2.8rem; }
+    .lp-h2 {
+      font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 900;
+      color: var(--dark); margin-bottom: 1rem; padding-bottom: .6rem;
+      border-bottom: 2px solid var(--ivory);
+    }
+    .lp-h3 {
+      font-size: .9rem; font-weight: 700; color: var(--saffron);
+      margin: 1.2rem 0 .5rem; text-transform: uppercase; letter-spacing: .8px;
+    }
+    .lp-body p { font-size: .95rem; line-height: 1.8; color: var(--charcoal); margin-bottom: .8rem; }
+    .lp-list {
+      list-style: none; display: flex; flex-direction: column; gap: .6rem;
+      margin: .8rem 0 1rem; padding: 0;
+    }
+    .lp-list li {
+      display: flex; align-items: flex-start; gap: .7rem;
+      font-size: .93rem; line-height: 1.65; color: var(--charcoal);
+      padding: .6rem .9rem; background: #fff; border-radius: 10px;
+      border: 1px solid rgba(123,13,62,.07);
+    }
+    .lp-list li::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--saffron); flex-shrink: 0; margin-top: .55rem;
+    }
+
+    /* Definition grid */
+    .lp-def-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; margin-top: .8rem;
+    }
+    .lp-def {
+      background: #fff; border-radius: 12px; padding: 1rem 1.1rem;
+      border: 1px solid rgba(123,13,62,.08); display: flex; flex-direction: column; gap: .3rem;
+    }
+    .lp-def-term { font-weight: 700; font-size: .85rem; color: var(--saffron); }
+    .lp-def-desc { font-size: .83rem; color: var(--tan); line-height: 1.55; }
+
+    /* Sub-headings h4 */
+    .lp-h4 {
+      font-size: .88rem; font-weight: 700; color: var(--dark);
+      margin: 1.2rem 0 .5rem; padding-left: .8rem;
+      border-left: 3px solid rgba(123,13,62,.25);
+    }
+
+    /* Cookie table */
+    .lp-cookie-table {
+      border-radius: 14px; overflow: hidden;
+      border: 1.5px solid rgba(123,13,62,.1); margin-top: .8rem;
+    }
+    .lp-cookie-row {
+      display: grid; grid-template-columns: 1.4fr 1fr 2fr;
+      gap: 0; font-size: .84rem; line-height: 1.55;
+    }
+    .lp-cookie-row > span {
+      padding: .85rem 1rem; border-bottom: 1px solid rgba(123,13,62,.07);
+      border-right: 1px solid rgba(123,13,62,.07); color: var(--charcoal);
+    }
+    .lp-cookie-row > span:last-child { border-right: none; }
+    .lp-cookie-head { background: var(--ivory); }
+    .lp-cookie-head > span { font-weight: 700; font-size: .78rem; text-transform: uppercase; letter-spacing: .8px; color: var(--tan); }
+    .lp-cookie-row:last-child > span { border-bottom: none; }
+    .lp-cookie-row:nth-child(even) { background: #fdf8fb; }
+    @media (max-width: 600px) {
+      .lp-cookie-row { grid-template-columns: 1fr; }
+      .lp-cookie-row > span { border-right: none; }
+      .lp-cookie-head { display: none; }
+    }
+
+    /* Contact box */
+    .lp-contact-box {
+      background: var(--ivory); border-radius: 14px; padding: 1.4rem 1.6rem;
+      border: 1.5px solid rgba(123,13,62,.1); display: flex;
+      flex-direction: column; gap: .7rem; margin-top: 1rem;
+    }
+    .lp-contact-row {
+      display: flex; align-items: center; gap: .8rem;
+      font-size: .9rem; font-weight: 600; color: var(--dark);
+    }
+    .lp-contact-row a { color: var(--saffron); text-decoration: none; }
+    .lp-contact-row a:hover { text-decoration: underline; }
+    .lp-contact-icon { font-size: 1.1rem; }
+
+    /* ══ RESPONSIVE ══ */
+    @media (max-width: 768px) {
+      .hero-grid, .eco-grid, .steps, .footer-grid { grid-template-columns: 1fr; }
+      .hero-phone-wrap { display: none; }
+      nav ul { display: none; }
+      .foot-bottom { flex-direction: column; text-align: center; }
+      .lp-wrap { padding: 28px 5vw 60px; }
+      .lp-def-grid { grid-template-columns: 1fr; }
+      .lp-hero { padding: 90px 5vw 40px; }
+    }
+    @media (max-width: 480px) {
+      .nav-tabs { gap: 0; }
+      .nav-tab { padding: 8px 14px; font-size: .8rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    <div class="logo-icon">🍽️</div>
+    <span class="logo-text">Big <span>Bite</span></span>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" id="tab-home" onclick="showPage('home')">🏠 Home</button>
+    <button class="nav-tab danger" id="tab-delete" onclick="showPage('delete')">🗑️ Delete Account</button>
+  </div>
+</nav>
+
+<!-- HOME PAGE -->
+<div id="page-home">
+
+<!-- HERO -->
+<section id="home">
+  <div class="hero-blob blob1"></div>
+  <div class="hero-blob blob2"></div>
+  <div class="hero-grid">
+    <div data-a>
+      <div class="hero-eyebrow">🇮🇳 Now live across Gujarat &amp; beyond</div>
+      <h1 class="hero-title">
+        Food Ordering,<br>
+        <span class="accent">Simple.</span>
+        <span class="sub-accent"> Fast.</span>
+      </h1>
+      <p class="hero-desc">Big Bite Food App makes ordering food from nearby restaurants effortless — browse menus, customise your meal, pay securely, and track your order in real time.</p>
+      <div class="hero-actions">
+        <a href="https://play.google.com/store/apps/details?id=com.bigbitefood.app" target="_blank" class="btn-main">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0"><path d="M3.18 23.76c.3.17.64.24.99.19l12.6-11.62-2.93-2.93L3.18 23.76zm15.6-14.39L4.14.64C3.8.43 3.42.38 3.08.55L14.97 12.44l3.81-3.07zm2.3 4.35c.38-.22.62-.63.62-1.07s-.24-.85-.61-1.07L18.6 10.4l-3.24 2.99 3.24 2.98 2.48-1.65zM3.08 23.45c.04.02.09.04.14.05L14.97 11.75 3.18.55c-.05.02-.1.04-.14.06C2.69.84 2.44 1.26 2.44 1.7v20.6c0 .44.25.86.64 1.15z"/></svg>
+          <span style="display:flex;flex-direction:column;line-height:1.2;text-align:left"><small style="font-size:.65rem;opacity:.8;font-weight:400">Get it on</small><strong style="font-size:.95rem">Google Play</strong></span>
+        </a>
+        <a href="https://apps.apple.com/in/app/big-bite-food-app/id6748983921" target="_blank" class="btn-main" style="background:#fff;color:var(--dark);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          <span style="display:flex;flex-direction:column;line-height:1.2;text-align:left"><small style="font-size:.65rem;opacity:.7;font-weight:400">Download on the</small><strong style="font-size:.95rem">App Store</strong></span>
+        </a>
+        <a href="#features" class="btn-ghost">Explore Features</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hstat">
+          <div class="hstat-num">1K<span>+</span></div>
+          <div class="hstat-label">Downloads</div>
+        </div>
+        <div class="hstat">
+          <div class="hstat-num">3.8<span>★</span></div>
+          <div class="hstat-label">Play Store Rating</div>
+        </div>
+        <div class="hstat">
+          <div class="hstat-num">14<span>+</span></div>
+          <div class="hstat-label">Delivery Cities</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-phone-wrap" data-a>
+      <div class="float-card f1">
+        <span class="fc-icon">🚀</span>
+        <div><span class="fc-label">Fast Delivery</span><span class="fc-sub">Track in real-time</span></div>
+      </div>
+      <div class="phone">
+        <div class="phone-bar"><div class="phone-pill"></div></div>
+        <div class="phone-body">
+          <div class="pb-head">
+            <span class="pb-logo">🍽️ Big Bite</span>
+            <span class="pb-cart">🛒 2</span>
+          </div>
+          <div class="pb-search">🔍 Search restaurants or food…</div>
+          <div class="pb-cats">
+            <div class="pb-cat a">🍛 Food</div>
+            <div class="pb-cat b">🛵 Nearby</div>
+            <div class="pb-cat b">⭐ Top</div>
+          </div>
+          <div class="pb-section">Featured Items</div>
+          <div class="pb-card">
+            <div class="pb-emoji">🍛</div>
+            <div class="pb-info">
+              <div class="pb-name">Dal Baati Churma</div>
+              <div class="pb-price">₹149</div>
+            </div>
+            <div class="pb-add">+</div>
+          </div>
+          <div class="pb-card">
+            <div class="pb-emoji">🍔</div>
+            <div class="pb-info">
+              <div class="pb-name">Masala Burger</div>
+              <div class="pb-price">₹89</div>
+            </div>
+            <div class="pb-add">+</div>
+          </div>
+          <div class="pb-card">
+            <div class="pb-emoji">🍕</div>
+            <div class="pb-info">
+              <div class="pb-name">Paneer Pizza</div>
+              <div class="pb-price">₹199</div>
+            </div>
+            <div class="pb-add">+</div>
+          </div>
+          <div class="pb-card">
+            <div class="pb-emoji">🥗</div>
+            <div class="pb-info">
+              <div class="pb-name">Veg Thali</div>
+              <div class="pb-price">₹129</div>
+            </div>
+            <div class="pb-add">+</div>
+          </div>
+        </div>
+      </div>
+      <div class="float-card f2">
+        <span class="fc-icon">✅</span>
+        <div><span class="fc-label">Secure Payment</span><span class="fc-sub">Data encrypted</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DELIVERY ZONE MARQUEE -->
+<div class="zone-bar">
+  <div class="zone-track">
+    <!-- repeated twice for seamless loop -->
+    <span class="zone-item">📍 Ahmedabad</span><span class="zone-dot"></span>
+    <span class="zone-item">📍 Rajkot</span><span class="zone-dot"></span>
+    <span class="zone-item">📍 Mehsana</span><span class="zone-dot"></span>
+    <span class="zone-item">📍 Tharad</span><span class="zone-dot"></span>
+    <span class="zone-item">📍 DEESA</span><span class="zone-dot"></span>
+    <span class="zone-item">📍 Bhachau</span><span class="zone-dot"></span>
+    <span class="zone-item">📍 Sanchor</span><span class="zone-dot"></span>
+    <span class="zone-item">📍 CHHAPI</span><span class="zone-dot"></span>
+    <span class="zone-item">📍 Radka</span><span class="zone-dot"></span>
+    <span class="zone-item">📍 Indore</span><span class="zone-dot"></span>
+    <span class="zone-item">📍 Sidhhpur</span><span class="zone-dot"></span>
+    <span class="zone-item">📍 GANDHIDHAM</span><span class="zone-dot"></span>
+    <span class="zone-item">📍 Patan</span><span class="zone-dot"></span>
+    <span class="zone-item">📍 Bapunagar</span><span class="zone-dot"></span>
+    <!-- duplicate -->
+    <span class="zone-item">📍 Ahmedabad</span><span class="zone-dot"></span>
+    <span class="zone-item">📍 Rajkot</span><span class="zone-dot"></span>
+    <span class="zone-item">📍 Mehsana</span><span class="zone-dot"></span>
+    <span class="zone-item">📍 Tharad</span><span class="zone-dot"></span>
+    <span class="zone-item">📍 DEESA</span><span class="zone-dot"></span>
+    <span class="zone-item">📍 Bhachau</span><span class="zone-dot"></span>
+    <span class="zone-item">📍 Sanchor</span><span class="zone-dot"></span>
+    <span class="zone-item">📍 CHHAPI</span><span class="zone-dot"></span>
+    <span class="zone-item">📍 Radka</span><span class="zone-dot"></span>
+    <span class="zone-item">📍 Indore</span><span class="zone-dot"></span>
+    <span class="zone-item">📍 Sidhhpur</span><span class="zone-dot"></span>
+    <span class="zone-item">📍 GANDHIDHAM</span><span class="zone-dot"></span>
+    <span class="zone-item">📍 Patan</span><span class="zone-dot"></span>
+    <span class="zone-item">📍 Bapunagar</span><span class="zone-dot"></span>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div data-a>
+    <p class="sec-label">Key Features</p>
+    <h2 class="sec-title">Everything You Need<br>in One App</h2>
+  </div>
+  <div class="feat-grid">
+    <div class="feat-card" data-a>
+      <div class="feat-icon">🔐</div>
+      <div class="feat-name">Easy Login & Registration</div>
+      <div class="feat-desc">Quick and secure account setup. Sign up in seconds and start ordering your favourite meals immediately.</div>
+    </div>
+    <div class="feat-card" data-a>
+      <div class="feat-icon">🏪</div>
+      <div class="feat-name">Browse Restaurants</div>
+      <div class="feat-desc">Discover nearby restaurants and food items with a clean, intuitive interface built for smooth navigation.</div>
+    </div>
+    <div class="feat-card" data-a>
+      <div class="feat-icon">⚡</div>
+      <div class="feat-name">Simple Ordering Process</div>
+      <div class="feat-desc">Place your order in just a few taps. No confusion — just fast, smooth checkout from browse to order placed.</div>
+    </div>
+    <div class="feat-card" data-a>
+      <div class="feat-icon">💳</div>
+      <div class="feat-name">Secure Checkout</div>
+      <div class="feat-desc">Your payment and personal data are always encrypted in transit. Shop with confidence every time.</div>
+    </div>
+    <div class="feat-card" data-a>
+      <div class="feat-icon">📦</div>
+      <div class="feat-name">Order Status Updates</div>
+      <div class="feat-desc">Live order status updates right inside the app. Know exactly what stage your food is at, always.</div>
+    </div>
+    <div class="feat-card" data-a>
+      <div class="feat-icon">📍</div>
+      <div class="feat-name">Location Tracking</div>
+      <div class="feat-desc">Real-time location tracking for your delivery. Watch your food travel from the kitchen to your door.</div>
+    </div>
+    <div class="feat-card" data-a>
+      <div class="feat-icon">🎁</div>
+      <div class="feat-name">Referral Rewards</div>
+      <div class="feat-desc">Refer friends and earn points. The more you share, the more you earn — points redeemable on your next order.</div>
+    </div>
+    <div class="feat-card" data-a>
+      <div class="feat-icon">🛡️</div>
+      <div class="feat-name">No Third-Party Data Sharing</div>
+      <div class="feat-desc">Your data stays yours. Big Bite does not share your personal information with any third parties.</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="inner">
+    <div data-a>
+      <p class="sec-label">How It Works</p>
+      <h2 class="sec-title">Order in 3 Easy Steps</h2>
+    </div>
+    <div class="steps">
+      <div class="step" data-a>
+        <div class="step-num">1</div>
+        <div class="step-title">Open the App</div>
+        <div class="step-desc">Download Big Bite Food App from Google Play Store or Apple App Store and sign in or create your account in seconds.</div>
+      </div>
+      <div class="step" data-a>
+        <div class="step-num">2</div>
+        <div class="step-title">Select Your Food</div>
+        <div class="step-desc">Browse restaurants and menus near you. Pick your favourite snacks, meals or daily food items.</div>
+      </div>
+      <div class="step" data-a>
+        <div class="step-num">3</div>
+        <div class="step-title">Place Your Order</div>
+        <div class="step-desc">Checkout securely, then sit back and track your delivery live until it reaches your doorstep.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DELIVERY ZONES -->
+<section id="zones">
+  <div data-a>
+    <p class="sec-label">Where We Deliver</p>
+    <h2 class="sec-title">Covering 14+ Cities<br>Across India</h2>
+  </div>
+  <div class="zones-grid">
+    <div class="zone-pill"><span class="pin">📍</span>Ahmedabad</div>
+    <div class="zone-pill"><span class="pin">📍</span>Rajkot</div>
+    <div class="zone-pill"><span class="pin">📍</span>Mehsana</div>
+    <div class="zone-pill"><span class="pin">📍</span>Tharad</div>
+    <div class="zone-pill"><span class="pin">📍</span>DEESA</div>
+    <div class="zone-pill"><span class="pin">📍</span>Bhachau</div>
+    <div class="zone-pill"><span class="pin">📍</span>Sanchor</div>
+    <div class="zone-pill"><span class="pin">📍</span>CHHAPI</div>
+    <div class="zone-pill"><span class="pin">📍</span>Radka</div>
+    <div class="zone-pill"><span class="pin">📍</span>Indore</div>
+    <div class="zone-pill"><span class="pin">📍</span>Sidhhpur</div>
+    <div class="zone-pill"><span class="pin">📍</span>GANDHIDHAM</div>
+    <div class="zone-pill"><span class="pin">📍</span>Patan</div>
+    <div class="zone-pill"><span class="pin">📍</span>Bapunagar</div>
+  </div>
+</section>
+
+<!-- ECOSYSTEM -->
+<section id="eco">
+  <div class="inner">
+    <div data-a style="text-align:center;margin-bottom:3rem">
+      <p class="sec-label" style="text-align:center">The Big Bite Ecosystem</p>
+      <h2 class="sec-title" style="text-align:center">Three Apps, One Platform</h2>
+    </div>
+    <div class="eco-grid">
+      <div class="eco-card" data-a>
+        <span class="eco-emoji">👤</span>
+        <div class="eco-title">Customer App</div>
+        <div class="eco-desc">Browse restaurants, order food and track your delivery — all from one clean, easy-to-use app.</div>
+        <a href="https://play.google.com/store/apps/details?id=com.bigbitefood.app" target="_blank" class="eco-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0"><path d="M3.18 23.76c.3.17.64.24.99.19l12.6-11.62-2.93-2.93L3.18 23.76zm15.6-14.39L4.14.64C3.8.43 3.42.38 3.08.55L14.97 12.44l3.81-3.07zm2.3 4.35c.38-.22.62-.63.62-1.07s-.24-.85-.61-1.07L18.6 10.4l-3.24 2.99 3.24 2.98 2.48-1.65zM3.08 23.45c.04.02.09.04.14.05L14.97 11.75 3.18.55c-.05.02-.1.04-.14.06C2.69.84 2.44 1.26 2.44 1.7v20.6c0 .44.25.86.64 1.15z"/></svg>
+          Google Play
+        </a>
+        <a href="https://apps.apple.com/in/app/big-bite-food-app/id6748983921" target="_blank" class="eco-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          App Store
+        </a>
+      </div>
+      <div class="eco-card" data-a>
+        <span class="eco-emoji">🏪</span>
+        <div class="eco-title">Seller App</div>
+        <div class="eco-desc">Restaurant owners manage menus, receive orders and track earnings — become a Big Bite seller today.</div>
+        <a href="#" class="eco-btn">Become a Seller</a>
+      </div>
+      <div class="eco-card" data-a>
+        <span class="eco-emoji">🛵</span>
+        <div class="eco-title">Deliveryman App</div>
+        <div class="eco-desc">Earn money on your schedule. Accept deliveries, navigate with ease and get paid fast.</div>
+        <a href="#" class="eco-btn">Become a Rider</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div data-a>
+    <p class="sec-label">Play Store Reviews</p>
+    <h2 class="sec-title">What Customers Say</h2>
+  </div>
+  <div class="reviews-grid">
+    <div class="review-card" data-a>
+      <div class="rv-stars">★★★★★</div>
+      <div class="rv-text">"Food is delicious and services are too good. Thanks Big Bite!"</div>
+      <div class="rv-author">Fenal Patel</div>
+      <div class="rv-date">March 22, 2026</div>
+    </div>
+    <div class="review-card" data-a>
+      <div class="rv-stars">★★★☆☆</div>
+      <div class="rv-text">"Platform fee of ₹25 on every order feels high, especially with a ₹100 minimum. The app also needs better food quantity/weight details and spice-level options."</div>
+      <div class="rv-author">Dhirendra SoLaNkI</div>
+      <div class="rv-date">March 16, 2026</div>
+    </div>
+    <div class="review-card" data-a>
+      <div class="rv-stars">★★★★☆</div>
+      <div class="rv-text">"Simple, clean app that does exactly what it promises. Ordering is quick and the status updates are helpful."</div>
+      <div class="rv-author">Verified User</div>
+      <div class="rv-date">April 2026</div>
+    </div>
+  </div>
+</section>
+
+<!-- DOWNLOAD CTA -->
+<section id="download">
+  <div class="inner">
+    <h2 class="dl-title">Hungry? Download<br>Big Bite Now</h2>
+    <p class="dl-sub">Join thousands of customers across Gujarat and India ordering their favourite food with just a few taps. Fast, secure, and always fresh.</p>
+    <a href="https://play.google.com/store/apps/details?id=com.bigbitefood.app" target="_blank" class="dl-btn">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" class="dl-btn-icon"><path d="M3.18 23.76c.3.17.64.24.99.19l12.6-11.62-2.93-2.93L3.18 23.76zm15.6-14.39L4.14.64C3.8.43 3.42.38 3.08.55L14.97 12.44l3.81-3.07zm2.3 4.35c.38-.22.62-.63.62-1.07s-.24-.85-.61-1.07L18.6 10.4l-3.24 2.99 3.24 2.98 2.48-1.65zM3.08 23.45c.04.02.09.04.14.05L14.97 11.75 3.18.55c-.05.02-.1.04-.14.06C2.69.84 2.44 1.26 2.44 1.7v20.6c0 .44.25.86.64 1.15z"/></svg>
+      <div class="dl-btn-text"><small>Get it on</small><strong>Google Play</strong></div>
+    </a>
+    <a href="https://apps.apple.com/in/app/big-bite-food-app/id6748983921" target="_blank" class="dl-btn">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" class="dl-btn-icon"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+      <div class="dl-btn-text"><small>Download on the</small><strong>App Store</strong></div>
+    </a>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div data-a style="text-align:center;margin-bottom:2.5rem">
+    <p class="sec-label" style="text-align:center">Get in Touch</p>
+    <h2 class="sec-title" style="text-align:center">Contact Big Bite</h2>
+  </div>
+  <div class="contact-grid">
+    <div class="contact-card" data-a>
+      <div class="cc-icon">📧</div>
+      <div>
+        <div class="cc-label">Email Support</div>
+        <div class="cc-val"><a href="mailto:bigbite975@gmail.com">bigbite975@gmail.com</a></div>
+      </div>
+    </div>
+    <div class="contact-card" data-a>
+      <div class="cc-icon">📞</div>
+      <div>
+        <div class="cc-label">Phone</div>
+        <div class="cc-val"><a href="tel:+919909604905">+91 99096 04905</a></div>
+      </div>
+    </div>
+    <div class="contact-card" data-a>
+      <div class="cc-icon">📍</div>
+      <div>
+        <div class="cc-label">Location</div>
+        <div class="cc-val">Mehsana, Gujarat 384002, India</div>
+      </div>
+    </div>
+  </div>
+</section><!-- end contact -->
+
+</div><!-- end page-home -->
+
+<!-- DELETE PAGE -->
+<div id="page-delete" style="display:none">
+
+<!-- Delete page top bar -->
+<div style="background:var(--dark);padding:80px 5vw 40px;text-align:center;">
+  <button onclick="showPage('home')" style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.15);padding:10px 22px;border-radius:50px;font-family:'Sora',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;margin-bottom:2rem;transition:all .2s;" onmouseover="this.style.background='rgba(123,13,62,.3)';this.style.color='#C4365A'" onmouseout="this.style.background='rgba(255,255,255,.08)';this.style.color='rgba(255,255,255,.7)'">← Back to Home</button>
+  <h2 style="font-family:'Fraunces',serif;font-size:clamp(1.8rem,3vw,2.8rem);font-weight:900;color:#fff;margin-bottom:.6rem;">Account Deletion</h2>
+  <p style="color:rgba(255,255,255,.5);font-size:.95rem;">Big Bite Food App · bigbitefoodapp.com</p>
+</div>
+
+<!-- ACCOUNT DELETION -->
+<section id="delete">
+  <div class="inner">
+    <div style="text-align:center;margin-bottom:2rem" data-a>
+      <div class="del-badge">⚠️ Permanent &amp; Irreversible Action</div>
+      <h2 class="del-title">Delete Your Account</h2>
+      <p class="del-sub">We're sorry you want to leave. Please read carefully — account deletion is permanent and all your data will be erased from our systems.</p>
+    </div>
+
+    <div class="del-warning" data-a>
+      <h4>🗑️ What gets permanently deleted</h4>
+      <ul>
+        <li>👤 Your name, email address, phone number and profile</li>
+        <li>📋 All order history and past receipts</li>
+        <li>📍 Saved delivery addresses</li>
+        <li>🎁 Loyalty points, referral rewards and coupons</li>
+        <li>💳 Saved payment methods on your account</li>
+        <li>❌ Access to the app and all associated data</li>
+      </ul>
+    </div>
+
+    <div class="del-form" data-a>
+      <h3>Submit Deletion Request</h3>
+
+      <div class="fg">
+        <label for="d-name">Full Name</label>
+        <input type="text" id="d-name" placeholder="Your registered full name" />
+      </div>
+      <div class="fg">
+        <label for="d-email">Registered Email Address</label>
+        <input type="email" id="d-email" placeholder="bigbite975@gmail.com" />
+      </div>
+      <div class="fg">
+        <label for="d-phone">Registered Phone Number</label>
+        <input type="tel" id="d-phone" placeholder="+91 XXXXX XXXXX" />
+      </div>
+      <div class="fg">
+        <label for="d-reason">Reason for Deletion</label>
+        <select id="d-reason">
+          <option value="">— Select a reason —</option>
+          <option>I no longer use the app</option>
+          <option>Privacy or data concerns</option>
+          <option>Platform fees are too high</option>
+          <option>Switching to another service</option>
+          <option>Technical issues with the app</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label for="d-note">Additional Comments (optional)</label>
+        <textarea id="d-note" placeholder="Help us improve — let us know what we can do better…"></textarea>
+      </div>
+      <div class="fg">
+        <div class="cb-row">
+          <input type="checkbox" id="d-confirm" />
+          <label for="d-confirm" class="cb-text">
+            I understand that deleting my account is <strong>permanent and cannot be undone</strong>. All my personal data, order history, rewards and saved information will be erased from Big Bite's systems and cannot be recovered.
+          </label>
+        </div>
+      </div>
+
+      <button class="del-submit" onclick="submitDelete()">🗑️ Submit Account Deletion Request</button>
+      <div class="del-success" id="del-ok">
+        ✅ Your deletion request has been submitted. We'll process it within <strong>7 business days</strong> and send a confirmation to your registered email address.
+      </div>
+    </div>
+  </div>
+</section><!-- end delete -->
+
+</div><!-- end page-delete -->
+
+<!-- ═══════════════════════════════════════════════════
+     PRIVACY POLICY PAGE (standalone, hidden by default)
+════════════════════════════════════════════════════ -->
+<div id="page-privacy" style="display:none;">
+  <!-- Top Hero Bar -->
+  <div class="lp-hero">
+    <div class="lp-hero-inner">
+      <button class="lp-back" onclick="showPage('home')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back to Home
+      </button>
+      <div class="lp-badge">Legal Document</div>
+      <h1 class="lp-title">Privacy Policy</h1>
+      <p class="lp-sub">Big Bite Food App &nbsp;·&nbsp; Last updated: April 01, 2025</p>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="lp-wrap">
+    <!-- TOC Sidebar -->
+<!-- Main Text -->
+    <article class="lp-body">
+      <p class="lp-intro">This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You. We use Your Personal data to provide and improve the Service. By using the Service, You agree to the collection and use of information in accordance with this Privacy Policy.</p>
+
+      <!-- 1 -->
+      <section class="lp-section" id="pp-s1">
+        <h2 class="lp-h2">Interpretation and Definitions</h2>
+        <h3 class="lp-h3">Interpretation</h3>
+        <p>The words of which the initial letter is capitalized have meanings defined under the following conditions. The following definitions shall have the same meaning regardless of whether they appear in singular or in plural.</p>
+        <h3 class="lp-h3">Definitions</h3>
+        <p>For the purposes of this Privacy Policy:</p>
+        <div class="lp-def-grid">
+          <div class="lp-def"><span class="lp-def-term">Account</span><span class="lp-def-desc">A unique account created for You to access our Service or parts of our Service.</span></div>
+          <div class="lp-def"><span class="lp-def-term">Affiliate</span><span class="lp-def-desc">An entity that controls, is controlled by or is under common control with a party, where "control" means ownership of 50% or more of the shares, equity interest or other securities entitled to vote for election of directors or other managing authority.</span></div>
+          <div class="lp-def"><span class="lp-def-term">Application</span><span class="lp-def-desc">Refers to Big Bite, the software program provided by the Company.</span></div>
+          <div class="lp-def"><span class="lp-def-term">Company</span><span class="lp-def-desc">Referred to as either "the Company", "We", "Us" or "Our" in this Agreement, refers to Big Bite.</span></div>
+          <div class="lp-def"><span class="lp-def-term">Cookies</span><span class="lp-def-desc">Small files placed on Your computer, mobile device or any other device by a website, containing details of Your browsing history on that website among its many uses.</span></div>
+          <div class="lp-def"><span class="lp-def-term">Country</span><span class="lp-def-desc">Gujarat, India.</span></div>
+          <div class="lp-def"><span class="lp-def-term">Device</span><span class="lp-def-desc">Any device that can access the Service such as a computer, a cellphone or a digital tablet.</span></div>
+          <div class="lp-def"><span class="lp-def-term">Personal Data</span><span class="lp-def-desc">Any information that relates to an identified or identifiable individual.</span></div>
+          <div class="lp-def"><span class="lp-def-term">Service</span><span class="lp-def-desc">Refers to the Application or the Website or both.</span></div>
+          <div class="lp-def"><span class="lp-def-term">Service Provider</span><span class="lp-def-desc">Any natural or legal person who processes the data on behalf of the Company; third-party companies or individuals employed to facilitate the Service or assist in analyzing how the Service is used.</span></div>
+          <div class="lp-def"><span class="lp-def-term">Third-party Social Media Service</span><span class="lp-def-desc">Any website or social network through which a User can log in or create an account to use the Service.</span></div>
+          <div class="lp-def"><span class="lp-def-term">Usage Data</span><span class="lp-def-desc">Data collected automatically, either generated by the use of the Service or from the Service infrastructure itself (for example, the duration of a page visit).</span></div>
+          <div class="lp-def"><span class="lp-def-term">Website</span><span class="lp-def-desc">Refers to Big Bite, accessible from https://app.bigbite.store</span></div>
+          <div class="lp-def"><span class="lp-def-term">You</span><span class="lp-def-desc">The individual accessing or using the Service, or the company or other legal entity on behalf of which such individual is accessing or using the Service.</span></div>
+        </div>
+      </section>
+
+      <!-- 2 -->
+      <section class="lp-section" id="pp-s2">
+        <h2 class="lp-h2">Collecting and Using Your Personal Data</h2>
+        <h3 class="lp-h3" id="pp-s3">Types of Data Collected</h3>
+
+        <h4 class="lp-h4">Personal Data</h4>
+        <p>While using Our Service, We may ask You to provide Us with certain personally identifiable information that can be used to contact or identify You. Personally identifiable information may include, but is not limited to:</p>
+        <ul class="lp-list">
+          <li>Email address</li>
+          <li>First name and last name</li>
+          <li>Phone number</li>
+          <li>Address, State, Province, ZIP/Postal code, City</li>
+          <li>Usage Data</li>
+        </ul>
+
+        <h4 class="lp-h4">Usage Data</h4>
+        <p>Usage Data is collected automatically when using the Service. Usage Data may include information such as Your Device's Internet Protocol address (e.g. IP address), browser type, browser version, the pages of our Service that You visit, the time and date of Your visit, the time spent on those pages, unique device identifiers and other diagnostic data.</p>
+        <p>When You access the Service by or through a mobile device, We may collect certain information automatically, including, but not limited to, the type of mobile device You use, Your mobile device unique ID, the IP address of Your mobile device, Your mobile operating system, the type of mobile Internet browser You use, unique device identifiers and other diagnostic data.</p>
+        <p>We may also collect information that Your browser sends whenever You visit our Service or when You access the Service by or through a mobile device.</p>
+
+        <h4 class="lp-h4">Information from Third-Party Social Media Services</h4>
+        <p>The Company allows You to create an account and log in to use the Service through the following Third-party Social Media Services: Google, Facebook, Instagram, Twitter, LinkedIn.</p>
+        <p>If You decide to register through or otherwise grant us access to a Third-Party Social Media Service, We may collect Personal data that is already associated with Your Third-Party Social Media Service's account, such as Your name, Your email address, Your activities or Your contact list associated with that account.</p>
+        <p>You may also have the option of sharing additional information with the Company through Your Third-Party Social Media Service's account. If You choose to provide such information and Personal Data, during registration or otherwise, You are giving the Company permission to use, share, and store it in a manner consistent with this Privacy Policy.</p>
+
+        <h4 class="lp-h4">Information Collected while Using the Application</h4>
+        <p>While using Our Application, in order to provide features of Our Application, We may collect, with Your prior permission:</p>
+        <ul class="lp-list">
+          <li>Information regarding your location</li>
+          <li>Information from your Device's phone book (contacts list)</li>
+          <li>Pictures and other information from your Device's camera and photo library</li>
+        </ul>
+        <p>We use this information to provide features of Our Service, to improve and customize Our Service. The information may be uploaded to the Company's servers and/or a Service Provider's server or it may be simply stored on Your device. You can enable or disable access to this information at any time, through Your Device settings.</p>
+
+        <h4 class="lp-h4">Tracking Technologies and Cookies</h4>
+        <p>We use Cookies and similar tracking technologies to track the activity on Our Service and store certain information. Tracking technologies used are beacons, tags, and scripts to collect and track information and to improve and analyze Our Service. The technologies We use may include:</p>
+        <ul class="lp-list">
+          <li><strong>Cookies or Browser Cookies.</strong> A cookie is a small file placed on Your Device. You can instruct Your browser to refuse all Cookies or to indicate when a Cookie is being sent. However, if You do not accept Cookies, You may not be able to use some parts of our Service.</li>
+          <li><strong>Web Beacons.</strong> Certain sections of our Service and our emails may contain small electronic files known as web beacons (also referred to as clear gifs, pixel tags, and single-pixel gifs) that permit the Company, for example, to count users who have visited those pages or opened an email and for other related website statistics.</li>
+        </ul>
+        <p>Cookies can be "Persistent" or "Session" Cookies. Persistent Cookies remain on Your personal computer or mobile device when You go offline, while Session Cookies are deleted as soon as You close Your web browser. We use both Session and Persistent Cookies for the purposes set out below:</p>
+        <div class="lp-cookie-table">
+          <div class="lp-cookie-row lp-cookie-head">
+            <span>Type</span><span>Kind</span><span>Purpose</span>
+          </div>
+          <div class="lp-cookie-row">
+            <span><strong>Necessary / Essential Cookies</strong></span>
+            <span>Session Cookies</span>
+            <span>Essential to provide services available through the Website and to authenticate users and prevent fraudulent use of user accounts.</span>
+          </div>
+          <div class="lp-cookie-row">
+            <span><strong>Cookies Policy / Notice Acceptance Cookies</strong></span>
+            <span>Persistent Cookies</span>
+            <span>Identify if users have accepted the use of cookies on the Website.</span>
+          </div>
+          <div class="lp-cookie-row">
+            <span><strong>Functionality Cookies</strong></span>
+            <span>Persistent Cookies</span>
+            <span>Allow us to remember choices You make when You use the Website, such as remembering your login details or language preference.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3 -->
+      <section class="lp-section" id="pp-s4">
+        <h2 class="lp-h2">Use of Your Personal Data</h2>
+        <p>The Company may use Personal Data for the following purposes:</p>
+        <ul class="lp-list">
+          <li><strong>To provide and maintain our Service,</strong> including to monitor the usage of our Service.</li>
+          <li><strong>To manage Your Account:</strong> to manage Your registration as a user of the Service. The Personal Data You provide can give You access to different functionalities of the Service that are available to You as a registered user.</li>
+          <li><strong>For the performance of a contract:</strong> the development, compliance and undertaking of the purchase contract for the products, items or services You have purchased or of any other contract with Us through the Service.</li>
+          <li><strong>To contact You:</strong> by email, telephone calls, SMS, or other equivalent forms of electronic communication, such as a mobile application's push notifications regarding updates or informative communications related to the functionalities, products or contracted services, including the security updates, when necessary or reasonable for their implementation.</li>
+          <li><strong>To provide You</strong> with news, special offers and general information about other goods, services and events which we offer that are similar to those that you have already purchased or enquired about unless You have opted not to receive such information.</li>
+          <li><strong>To manage Your requests:</strong> To attend and manage Your requests to Us.</li>
+          <li><strong>For business transfers:</strong> We may use Your information to evaluate or conduct a merger, divestiture, restructuring, reorganization, dissolution, or other sale or transfer of some or all of Our assets, whether as a going concern or as part of bankruptcy, liquidation, or similar proceeding, in which Personal Data held by Us about our Service users is among the assets transferred.</li>
+          <li><strong>For other purposes:</strong> such as data analysis, identifying usage trends, determining the effectiveness of our promotional campaigns and to evaluate and improve our Service, products, services, marketing and your experience.</li>
+        </ul>
+        <p>We may share Your personal information in the following situations:</p>
+        <ul class="lp-list">
+          <li><strong>With Service Providers:</strong> We may share Your personal information with Service Providers to monitor and analyze the use of our Service, to contact You.</li>
+          <li><strong>For business transfers:</strong> We may share or transfer Your personal information in connection with, or during negotiations of, any merger, sale of Company assets, financing, or acquisition of all or a portion of Our business to another company.</li>
+          <li><strong>With Affiliates:</strong> We may share Your information with Our affiliates, in which case we will require those affiliates to honor this Privacy Policy. Affiliates include Our parent company and any other subsidiaries, joint venture partners or other companies that We control or that are under common control with Us.</li>
+          <li><strong>With business partners:</strong> We may share Your information with Our business partners to offer You certain products, services or promotions.</li>
+          <li><strong>With other users:</strong> when You share personal information or otherwise interact in the public areas with other users, such information may be viewed by all users and may be publicly distributed outside.</li>
+          <li><strong>With Your consent:</strong> We may disclose Your personal information for any other purpose with Your consent.</li>
+        </ul>
+      </section>
+
+      <!-- 4 -->
+      <section class="lp-section" id="pp-s5">
+        <h2 class="lp-h2">Retention of Your Personal Data</h2>
+        <p>The Company will retain Your Personal Data only for as long as is necessary for the purposes set out in this Privacy Policy. We will retain and use Your Personal Data to the extent necessary to comply with our legal obligations (for example, if we are required to retain your data to comply with applicable laws), resolve disputes, and enforce our legal agreements and policies.</p>
+        <p>The Company will also retain Usage Data for internal analysis purposes. Usage Data is generally retained for a shorter period of time, except when this data is used to strengthen the security or to improve the functionality of Our Service, or We are legally obligated to retain this data for longer time periods.</p>
+      </section>
+
+      <!-- 5 -->
+      <section class="lp-section" id="pp-s6">
+        <h2 class="lp-h2">Transfer of Your Personal Data</h2>
+        <p>Your information, including Personal Data, is processed at the Company's operating offices and in any other places where the parties involved in the processing are located. It means that this information may be transferred to — and maintained on — computers located outside of Your state, province, country or other governmental jurisdiction where the data protection laws may differ than those from Your jurisdiction.</p>
+        <p>Your consent to this Privacy Policy followed by Your submission of such information represents Your agreement to that transfer.</p>
+        <p>The Company will take all steps reasonably necessary to ensure that Your data is treated securely and in accordance with this Privacy Policy and no transfer of Your Personal Data will take place to an organization or a country unless there are adequate controls in place including the security of Your data and other personal information.</p>
+      </section>
+
+      <!-- 6 -->
+      <section class="lp-section" id="pp-s7">
+        <h2 class="lp-h2">Delete Your Personal Data</h2>
+        <p>You have the right to delete or request that We assist in deleting the Personal Data that We have collected about You. Our Service may give You the ability to delete certain information about You from within the Service.</p>
+        <p>You may update, amend, or delete Your information at any time by signing in to Your Account, if you have one, and visiting the account settings section that allows you to manage Your personal information. You may also contact Us to request access to, correct, or delete any personal information that You have provided to Us.</p>
+        <p>Please note, however, that We may need to retain certain information when we have a legal obligation or lawful basis to do so.</p>
+      </section>
+
+      <!-- 7 -->
+      <!-- 8 -->
+      <section class="lp-section" id="pp-s9">
+        <h2 class="lp-h2">Security of Your Personal Data</h2>
+        <p>The security of Your Personal Data is important to Us, but remember that no method of transmission over the Internet, or method of electronic storage is 100% secure. While We strive to use commercially acceptable means to protect Your Personal Data, We cannot guarantee its absolute security.</p>
+      </section>
+
+      <!-- 9 -->
+      <section class="lp-section" id="pp-s10">
+        <h2 class="lp-h2">Children's Privacy</h2>
+        <p>Our Service does not address anyone under the age of 13. We do not knowingly collect personally identifiable information from anyone under the age of 13. If You are a parent or guardian and You are aware that Your child has provided Us with Personal Data, please contact Us. If We become aware that We have collected Personal Data from anyone under the age of 13 without verification of parental consent, We take steps to remove that information from Our servers.</p>
+        <p>If We need to rely on consent as a legal basis for processing Your information and Your country requires consent from a parent, We may require Your parent's consent before We collect and use that information.</p>
+      </section>
+
+      <!-- 10 -->
+      <section class="lp-section" id="pp-s11">
+        <h2 class="lp-h2">Links to Other Websites</h2>
+        <p>Our Service may contain links to other websites that are not operated by Us. If You click on a third party link, You will be directed to that third party's site. We strongly advise You to review the Privacy Policy of every site You visit.</p>
+        <p>We have no control over and assume no responsibility for the content, privacy policies or practices of any third party sites or services.</p>
+      </section>
+
+      <!-- 11 -->
+      <section class="lp-section" id="pp-s12">
+        <h2 class="lp-h2">Changes to this Privacy Policy</h2>
+        <p>We may update Our Privacy Policy from time to time. We will notify You of any changes by posting the new Privacy Policy on this page. We will let You know via email and/or a prominent notice on Our Service, prior to the change becoming effective and update the "Last updated" date at the top of this Privacy Policy.</p>
+        <p>You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.</p>
+      </section>
+
+      <!-- 12 -->
+      <section class="lp-section" id="pp-s13">
+        <h2 class="lp-h2">Contact Us</h2>
+        <p>If you have any questions about this Privacy Policy, You can contact us:</p>
+        <div class="lp-contact-box">
+          <div class="lp-contact-row"><span class="lp-contact-icon">📧</span><a href="mailto:bigbite975@gmail.com">bigbite975@gmail.com</a></div>
+          <div class="lp-contact-row"><span class="lp-contact-icon">🌐</span><a href="https://app.bigbite.store" target="_blank">https://app.bigbite.store</a></div>
+          <div class="lp-contact-row"><span class="lp-contact-icon">📍</span><span>Mehsana, Gujarat 384002, India</span></div>
+        </div>
+      </section>
+    </article>
+  </div>
+</div>
+
+<!-- ═══════════ TERMS PAGE ═══════════ -->
+<div id="page-terms" style="display:none;">
+  <!-- Top Hero Bar -->
+  <div class="lp-hero">
+    <div class="lp-hero-inner">
+      <button class="lp-back" onclick="showPage('home')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back to Home
+      </button>
+      <div class="lp-badge">Legal Document</div>
+      <h1 class="lp-title">Terms &amp; Conditions</h1>
+      <p class="lp-sub">Big Bite Food App &nbsp;·&nbsp; Last updated: April 01, 2025</p>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="lp-wrap">
+    <!-- TOC Sidebar -->
+<!-- Main Text -->
+    <article class="lp-body">
+      <p class="lp-intro">Welcome to <strong>Big Bite</strong>! These Terms and Conditions govern your use of our applications, services, and any online ordering features (collectively, the "Services"). By accessing or using our Services, you agree to comply with and be bound by these Terms.</p>
+
+      <section class="lp-section" id="tc-s1">
+        <h2 class="lp-h2">1. Use of the Website</h2>
+        <p>You agree to use our website for lawful purposes only. You must not use our website in a way that may impair its functionality or interfere with any other party's use.</p>
+      </section>
+
+      <section class="lp-section" id="tc-s2">
+        <h2 class="lp-h2">2. Ordering and Payment</h2>
+        <ul class="lp-list">
+          <li>All orders placed through our platform are subject to acceptance and availability.</li>
+          <li>Prices are displayed in <strong>₹</strong> and include applicable taxes unless stated otherwise.</li>
+          <li>Payments must be made through our approved payment methods at the time of placing the order.</li>
+        </ul>
+      </section>
+
+      <section class="lp-section" id="tc-s3">
+        <h2 class="lp-h2">3. Delivery and Pickup</h2>
+        <ul class="lp-list">
+          <li>Estimated delivery times are provided for convenience only and may vary based on location and availability.</li>
+          <li>For pickup orders, please bring a valid order confirmation.</li>
+        </ul>
+      </section>
+
+      <section class="lp-section" id="tc-s4">
+        <h2 class="lp-h2">4. User Accounts</h2>
+        <ul class="lp-list">
+          <li>You may need to create an account to use certain features. Keep your login credentials confidential.</li>
+          <li>You are responsible for all activities that occur under your account.</li>
+        </ul>
+      </section>
+
+      <section class="lp-section" id="tc-s5">
+        <h2 class="lp-h2">5. Intellectual Property</h2>
+        <p>All content on this site including logos, images, text, and graphics are the property of <strong>Big Bite</strong> and are protected by copyright laws. You may not use any content without our written consent.</p>
+      </section>
+
+      <section class="lp-section" id="tc-s6">
+        <h2 class="lp-h2">6. Limitation of Liability</h2>
+        <p>Big Bite shall not be liable for any indirect, incidental, or consequential damages resulting from the use or inability to use our Services.</p>
+      </section>
+
+      <section class="lp-section" id="tc-s7">
+        <h2 class="lp-h2">7. Changes to Terms</h2>
+        <p>We reserve the right to update these Terms at any time. Changes will be effective upon posting to the website.</p>
+      </section>
+    </article>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     TERMS & CONDITIONS PAGE (standalone, hidden by default)
+════════════════════════════════════════════════════ -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="foot-brand">
+      <span class="logo-text" style="font-family:'Fraunces',serif;">Big <span style="color:var(--saffron)">Bite</span></span>
+      <p class="foot-desc">Big Bite Food App — making food ordering simple, fast and convenient across Gujarat and India. Multivendor platform connecting customers, restaurants and delivery riders.</p>
+      <div class="foot-contact">
+        <div>📍 Mehsana, Gujarat 384002, India</div>
+        <div>📞 <a href="tel:+919909604905">+91 99096 04905</a></div>
+        <div>📧 <a href="mailto:bigbite975@gmail.com">bigbite975@gmail.com</a></div>
+      </div>
+    </div>
+    <div class="foot-col">
+      <h5>Navigate</h5>
+      <ul>
+        <li><a href="javascript:void(0)" onclick="showPage('home')">Home</a></li>
+        <li><a href="javascript:void(0)" onclick="showPage('home');setTimeout(()=>document.getElementById('features').scrollIntoView({behavior:'smooth'}),100)">Features</a></li>
+        <li><a href="javascript:void(0)" onclick="showPage('home');setTimeout(()=>document.getElementById('zones').scrollIntoView({behavior:'smooth'}),100)">Delivery Zones</a></li>
+        <li><a href="javascript:void(0)" onclick="showPage('home');setTimeout(()=>document.getElementById('eco').scrollIntoView({behavior:'smooth'}),100)">Ecosystem</a></li>
+        <li><a href="javascript:void(0)" onclick="showPage('home');setTimeout(()=>document.getElementById('download').scrollIntoView({behavior:'smooth'}),100)">Download App</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>Legal &amp; Support</h5>
+      <ul>
+        <li><a href="javascript:void(0)" onclick="showLegalPage('privacy')">Privacy Policy</a></li>
+        <li><a href="javascript:void(0)" onclick="showLegalPage('terms')">Terms &amp; Conditions</a></li>
+        <li><a href="javascript:void(0)" onclick="showPage('home');setTimeout(()=>document.getElementById('contact').scrollIntoView({behavior:'smooth'}),100)">Contact Us</a></li>
+        <li><a href="javascript:void(0)" onclick="showPage('delete')">Delete Account</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <p>© 2025 Big Bite Food Delivery. India.</p>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+      <a href="https://play.google.com/store/apps/details?id=com.bigbitefood.app" target="_blank" style="display:flex;align-items:center;gap:6px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3.18 23.76c.3.17.64.24.99.19l12.6-11.62-2.93-2.93L3.18 23.76zm15.6-14.39L4.14.64C3.8.43 3.42.38 3.08.55L14.97 12.44l3.81-3.07zm2.3 4.35c.38-.22.62-.63.62-1.07s-.24-.85-.61-1.07L18.6 10.4l-3.24 2.99 3.24 2.98 2.48-1.65zM3.08 23.45c.04.02.09.04.14.05L14.97 11.75 3.18.55c-.05.02-.1.04-.14.06C2.69.84 2.44 1.26 2.44 1.7v20.6c0 .44.25.86.64 1.15z"/></svg>
+        Google Play
+      </a>
+      <a href="https://apps.apple.com/in/app/big-bite-food-app/id6748983921" target="_blank" style="display:flex;align-items:center;gap:6px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        App Store
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── Page registry ──
+  const ALL_PAGES = ['page-home', 'page-delete', 'page-privacy', 'page-terms'];
+
+  function hideAll() {
+    ALL_PAGES.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+    document.getElementById('tab-home').classList.remove('active');
+    document.getElementById('tab-delete').classList.remove('active');
+  }
+
+  // ── Home / Delete ──
+  function showPage(page) {
+    hideAll();
+    if (page === 'home') {
+      document.getElementById('page-home').style.display = 'block';
+      document.getElementById('tab-home').classList.add('active');
+    } else {
+      document.getElementById('page-delete').style.display = 'block';
+      document.getElementById('tab-delete').classList.add('active');
+      document.querySelectorAll('#page-delete [data-a]').forEach(el => {
+        el.classList.remove('vis');
+        setTimeout(() => el.classList.add('vis'), 80);
+      });
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── Legal pages (Privacy, Terms) ──
+  function showLegalPage(which) {
+    hideAll();
+    const pageId = which === 'privacy' ? 'page-privacy' : 'page-terms';
+    document.getElementById(pageId).style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── Scroll animations ──
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('[data-a]').forEach(el => obs.observe(el));
+
+  // ── Delete form ──
+  function submitDelete() {
+    const name      = document.getElementById('d-name').value.trim();
+    const email     = document.getElementById('d-email').value.trim();
+    const phone     = document.getElementById('d-phone').value.trim();
+    const confirmed = document.getElementById('d-confirm').checked;
+    if (!name)                          { alert('Please enter your full name.');               return; }
+    if (!email || !email.includes('@')) { alert('Please enter a valid email address.');        return; }
+    if (!phone)                         { alert('Please enter your registered phone number.'); return; }
+    if (!confirmed)                     { alert('Please tick the confirmation checkbox.');      return; }
+    const btn = document.querySelector('.del-submit');
+    btn.textContent = '✅ Request Submitted';
+    btn.disabled = true;
+    document.getElementById('del-ok').style.display = 'block';
+  }
+</script>
+</body>
+</html>
